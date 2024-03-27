@@ -140,7 +140,7 @@ Cette implémentation de l'algorithme K-means prend les données en entrée et l
 
 # K-Means for binary data
 
-D'accord, voici une implémentation de l'algorithme K-means pour les données binaires :
+Voici une implémentation de l'algorithme K-means pour les données binaires :
 
 ```java
 import java.util.ArrayList;
