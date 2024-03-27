@@ -58,3 +58,5 @@ public class Test {
 ```
 
 Cette méthode `rowKNNSearch` prend en paramètres le tableau de données `data`, la ligne de requête `queryRow` et le nombre `k` de plus proches voisins à trouver. Elle calcule les similarités entre la ligne de requête et toutes les autres lignes, trie les résultats par ordre décroissant de similarité, puis affiche les k premiers voisins.
+
+[Code sur Github](https://github.com/rootoor-dev/pairwise-comparison/tree/main)
