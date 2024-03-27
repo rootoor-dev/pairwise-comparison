@@ -95,8 +95,17 @@ Dans la méthode des k plus proches voisins (KNN), le choix de la valeur de k es
 13. **Optimisation bayésienne :** L'optimisation bayésienne est une méthode d'optimisation itérative qui peut être utilisée pour trouver la valeur optimale de k en explorant efficacement l'espace des hyperparamètres. En utilisant des techniques telles que l'optimisation par acquisition (acquisition function) et les modèles de régression bayésienne, vous pouvez itérer pour trouver la meilleure valeur de k en minimisant ou maximisant une fonction objectif définie.
 
 14. **Techniques d'apprentissage automatique (Machine Learning Techniques) :** Des techniques d'apprentissage automatique telles que l'apprentissage supervisé ou l'apprentissage semi-supervisé peuvent être utilisées pour prédire la valeur optimale de k en se basant sur des modèles pré-entraînés ou en utilisant des ensembles de données similaires pour l'apprentissage.
+15. **Méthode de la silhouette (Silhouette Method) :** Cette méthode calcule le coefficient de silhouette pour chaque point de données, qui mesure à quel point ce point est similaire à son propre cluster par rapport aux autres clusters. Ensuite, la moyenne des coefficients de silhouette pour toutes les observations est calculée pour chaque valeur de k. La valeur de k qui maximise la moyenne du coefficient de silhouette est choisie comme la meilleure valeur de k.
 
+16. **Critères d'optimisation spécifiques au clustering :** Certains critères d'optimisation spécifiques au clustering, tels que l'indice Davies-Bouldin (DBI) ou l'indice de Calinski-Harabasz (CHI), peuvent être utilisés pour évaluer les performances du clustering pour différentes valeurs de k. Ces critères cherchent à maximiser la cohésion intra-cluster tout en minimisant la dispersion inter-cluster.
 
+17. **Visualisation des clusters :** La visualisation des clusters peut être une approche efficace pour déterminer la valeur optimale de k. En utilisant des techniques de réduction de dimensionnalité telles que l'analyse en composantes principales (PCA) ou la t-distributed stochastic neighbor embedding (t-SNE), vous pouvez visualiser les clusters pour différentes valeurs de k et choisir celle qui présente la meilleure séparation et la meilleure cohésion entre les clusters.
+
+18. **Méthodes basées sur la stabilité des clusters :** Ces méthodes évaluent la stabilité des clusters pour différentes valeurs de k en mesurant la similarité des clusters obtenus à partir de différents sous-ensembles ou échantillons bootstrap des données. La valeur de k qui produit les clusters les plus stables est choisie comme la meilleure.
+
+19. **Critères d'information pour le clustering :** Des critères d'information tels que le critère d'information bayésien (BIC) ou le critère d'information d'Akaike (AIC) peuvent également être utilisés pour comparer les modèles de clustering pour différentes valeurs de k. Le modèle avec la valeur de k qui minimise le critère d'information peut être sélectionné.
+
+20. **Techniques d'apprentissage semi-supervisé :** En utilisant des techniques d'apprentissage semi-supervisé, vous pouvez utiliser des données étiquetées pour estimer la qualité du clustering pour différentes valeurs de k. Les techniques d'apprentissage semi-supervisé peuvent être utilisées pour évaluer la cohérence des clusters par rapport aux étiquettes connues des données.
 
 ## code Java de test d'une des techniques
 
