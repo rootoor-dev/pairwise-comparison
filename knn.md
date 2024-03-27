@@ -187,3 +187,125 @@ public class Test {
 ```
 
 Cette implémentation de la validation croisée vous permettra de trouver la meilleure valeur de k pour votre ensemble de données en testant différentes valeurs de k et en mesurant les performances de l'algorithme des k plus proches voisins. Vous pouvez ensuite utiliser la valeur de k optimale pour effectuer la recherche des plus proches voisins sur votre ensemble de données complet.
+
+# KNN with optimal k choice using the silhouette method
+
+package ci.abidjan.adi.main;
+
+import java.util.Arrays;
+
+public class TestKNN {
+	public static void main(String[] args) {
+		double[][] binaryData = { { 1.0, 0.0, 0.0, 0.0, 0.0 }, { 1.0, 1.0, 1.0, 1.0, 0.0 }, { 0.0, 1.0, 1.0, 1.0, 1.0 },
+				{ 1.0, 0.0, 1.0, 1.0, 1.0 }, { 0.0, 0.0, 1.0, 1.0, 1.0 }, { 1.0, 1.0, 1.0, 0.0, 0.0 },
+				{ 0.0, 0.0, 1.0, 0.0, 1.0 } };
+		double[] queryRow = binaryData[binaryData.length - 1]; // Dernière ligne du tableau binaryData
+        int maxK = binaryData.length-1; // Valeur maximale de k à tester
+//		int maxK = (int) Math.sqrt(binaryData.length); // Valeur maximale de k à tester
+
+		// Trouver le nombre optimal de k
+		int optimalK = findOptimalK(binaryData, queryRow, maxK);
+		System.out.println("Optimal k found: " + optimalK);
+
+		// Appliquer k-NN avec le nombre optimal de k
+		rowKNNSearch(binaryData, queryRow, optimalK);
+	}
+
+	/**
+	 * Dans cette modification, après avoir trouvé la valeur optimale de k, nous
+	 * vérifions si elle est paire. Si c'est le cas, nous l'incrémentons de 1 pour
+	 * la rendre impaire, comme vous l'avez demandé. Ensuite, nous retournons la
+	 * valeur ajustée de optimalK. Cela garantit que optimalK sera toujours impair
+	 * après cette étape.
+	 * 
+	 * @param data
+	 * @param queryRow
+	 * @param maxK
+	 * @return
+	 */
+	public static int findOptimalK(double[][] data, double[] queryRow, int maxK) {
+	    if (data == null || data.length == 0 || queryRow == null || queryRow.length == 0 || maxK <= 0) {
+	        System.err.println("Invalid input.");
+	        return -1;
+	    }
+
+	    double maxSilhouette = Double.NEGATIVE_INFINITY;
+	    int optimalK = 1;
+
+	    for (int k = 2; k <= maxK; k++) {
+	        double[] silhouettes = new double[data.length];
+
+	        for (int i = 0; i < data.length; i++) {
+	            double[] neighborsDistances = new double[data.length - 1];
+	            int index = 0;
+
+	            for (int j = 0; j < data.length; j++) {
+	                if (j == i) continue;
+	                neighborsDistances[index++] = tanimoto(data[i], data[j]);
+	            }
+
+	            Arrays.sort(neighborsDistances);
+	            double silhouette = calculateSilhouette(i, neighborsDistances, k);
+	            silhouettes[i] = silhouette;
+	        }
+
+	        double avgSilhouette = Arrays.stream(silhouettes).average().orElse(Double.NaN);
+	        if (avgSilhouette > maxSilhouette) {
+	            maxSilhouette = avgSilhouette;
+	            optimalK = k;
+	        }
+	    }
+
+	    // Ajustement de optimalK si pair
+	    if (optimalK % 2 == 0) {
+	        optimalK++; // Si pair, ajoute 1 pour le rendre impair
+	    }
+
+	    return optimalK;
+	}
+
+	public static double calculateSilhouette(int pointIndex, double[] neighborsDistances, int k) {
+		double a = Arrays.stream(neighborsDistances).limit(k).average().orElse(0);
+		double b = Arrays.stream(neighborsDistances).skip(k).limit(neighborsDistances.length - k).average().orElse(0);
+		return (b - a) / Math.max(a, b);
+	}
+
+	public static void rowKNNSearch(double[][] data, double[] queryRow, int k) {
+		// Calcul des similarités entre la ligne de requête et les autres lignes
+		double[][] similarities = new double[data.length - 1][2];
+		for (int i = 0; i < data.length - 1; i++) {
+			similarities[i][0] = i; // Indice de la ligne
+			similarities[i][1] = tanimoto(queryRow, data[i]); // Similarité
+		}
+
+		// Trie des résultats par ordre décroissant de similarité
+		Arrays.sort(similarities, (a, b) -> Double.compare(b[1], a[1]));
+
+		// Affichage des k plus proches voisins
+		System.out.println("Les " + k + " plus proches voisins de la ligne sont :");
+		for (int i = 0; i < k; i++) {
+			int index = (int) similarities[i][0];
+			System.out.println("Ligne " + index + " - Similarité : " + similarities[i][1]);
+		}
+	}
+
+	public static double tanimoto(double[] vector1, double[] vector2) {
+		double AB = dotProduct(vector1, vector2);
+		double binaryEuclideanNormA = dotProduct(vector1, vector1);
+		double binaryEuclideanNormB = dotProduct(vector2, vector2);
+		return AB / (binaryEuclideanNormA + binaryEuclideanNormB - AB);
+	}
+
+	public static double dotProduct(double[] vector1, double[] vector2) {
+		if (vector1.length != vector2.length) {
+			throw new IllegalArgumentException("Vectors must have the same length.");
+		}
+
+		double dotProduct = 0.;
+
+		for (int i = 0; i < vector1.length; i++) {
+			dotProduct += vector1[i] * vector2[i];
+		}
+		return dotProduct;
+	}
+}
